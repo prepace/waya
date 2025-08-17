@@ -1,26 +1,400 @@
 @import "tailwindcss";
 
+/* ---------------------------
+   LIGHT THEME (default variables)
+   --------------------------- */
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0f172a;
+  /* strong text in light */
+
+  --background-contrast: #f8fafc;
+  /* card/input surface */
+  --border-color: #d1d5db;
+  /* gray-300 */
+  --overlay: rgba(0, 0, 0, 0.06);
+  --shadow-elevated: 0 8px 24px rgba(0, 0, 0, .10);
+
+  --background-gradient: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.06), transparent 12%), radial-gradient(circle at 90% 80%, rgba(56, 189, 248, 0.04), transparent 10%), linear-gradient(135deg, #f8fafc 0%, #eef2f7 45%, #e5e7eb 100%);
+
+  --muted-foreground: #475569;
+  /* slate-600 */
+  --placeholder: #5c636a;
+  /* zinc-500 */
+
+  --button-bg: #0f172a;
+  /* slate-900 */
+  --button-fg: #ffffff;
+  --button-bg-alt: #ffffff;
+  --button-fg-alt: #0f172a;
+
+  --ring: rgba(2, 132, 199, .35);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
+/* ---------------------------
+   SYSTEM DARK (fallback if no manual override)
+   --------------------------- */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground: #e5e7eb;
+    /* bright text in dark */
+
+    --background-contrast: #161616;
+    --border-color: #374151;
+    --overlay: rgba(255, 255, 255, .08);
+    --shadow-elevated: 0 8px 24px rgba(0, 0, 0, .35);
+
+    --background-gradient: radial-gradient(circle at 15% 25%, rgba(99, 102, 241, 0.06), transparent 12%), radial-gradient(circle at 80% 75%, rgba(168, 85, 247, 0.04), transparent 10%), linear-gradient(135deg, #06070a 0%, #0a0a0a 55%, #071022 100%);
+
+    --muted-foreground: #9ca3af;
+    /* zinc-400 */
+    --placeholder: #9ca3af;
+
+    --button-bg: #ffffff;
+    /* inverted on dark */
+    --button-fg: #0f172a;
+    --button-bg-alt: #0f172a;
+    --button-fg-alt: #ffffff;
+
+    --ring: rgba(125, 211, 252, .45);
   }
 }
 
+/* ---------------------------
+   MANUAL OVERRIDES (WIN over media query)
+   --------------------------- */
+html.light {
+  --background: #ffffff;
+  --foreground: #0f172a;
+
+  --background-contrast: #f8fafc;
+  --border-color: #d1d5db;
+  --overlay: rgba(0, 0, 0, 0.06);
+  --shadow-elevated: 0 8px 24px rgba(0, 0, 0, .10);
+
+  --background-gradient: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.06), transparent 12%), radial-gradient(circle at 90% 80%, rgba(56, 189, 248, 0.04), transparent 10%), linear-gradient(135deg, #f8fafc 0%, #eef2f7 45%, #e5e7eb 100%);
+
+  --muted-foreground: #475569;
+  --placeholder: #5c636a;
+
+  --button-bg: #0f172a;
+  --button-fg: #ffffff;
+  --button-bg-alt: #ffffff;
+  --button-fg-alt: #0f172a;
+
+  --ring: rgba(2, 132, 199, .35);
+}
+
+html.dark {
+  --background: #0a0a0a;
+  --foreground: #e5e7eb;
+
+  --background-contrast: #161616;
+  --border-color: #374151;
+  --overlay: rgba(255, 255, 255, .08);
+  --shadow-elevated: 0 8px 24px rgba(0, 0, 0, .35);
+
+  --background-gradient: radial-gradient(circle at 15% 25%, rgba(99, 102, 241, 0.06), transparent 12%), radial-gradient(circle at 80% 75%, rgba(168, 85, 247, 0.04), transparent 10%), linear-gradient(135deg, #06070a 0%, #0a0a0a 55%, #071022 100%);
+
+  --muted-foreground: #9ca3af;
+  --placeholder: #9ca3af;
+
+  --button-bg: #ffffff;
+  --button-fg: #0f172a;
+  --button-bg-alt: #0f172a;
+  --button-fg-alt: #ffffff;
+
+  --ring: rgba(125, 211, 252, .45);
+}
+
+/* ---------------------------
+   GLOBAL ELEMENTS
+   --------------------------- */
 body {
-  background: var(--background);
+  background: var(--background-gradient);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background 300ms ease, color 300ms ease;
+}
+
+/* Lava-lamp style animated glow layers (subtle) */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Stronger blobs for light mode so they are visible against pale backgrounds */
+html.light body::before {
+  background: radial-gradient(circle at 12% 18%, rgba(99, 102, 241, 0.28), transparent 20%), radial-gradient(circle at 92% 82%, rgba(56, 189, 248, 0.18), transparent 14%);
+  mix-blend-mode: normal;
+  opacity: 1;
+  filter: blur(22px);
+}
+
+html.light body::after {
+  background: radial-gradient(circle at 28% 68%, rgba(6, 24, 80, 0.38), transparent 20%), radial-gradient(circle at 78% 28%, rgba(10, 36, 120, 0.28), transparent 16%);
+  mix-blend-mode: normal;
+  opacity: 0.95;
+  filter: blur(30px);
+}
+
+body::before {
+  background: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.18), transparent 18%), radial-gradient(circle at 90% 80%, rgba(56, 189, 248, 0.12), transparent 12%);
+  mix-blend-mode: screen;
+  opacity: 0.9;
+  transform: translateZ(0);
+  animation: floatA 12s ease-in-out infinite;
+}
+
+body::after {
+  /* deep blue alternate blob */
+  background: radial-gradient(circle at 30% 70%, rgba(10, 25, 80, 0.22), transparent 18%), radial-gradient(circle at 80% 30%, rgba(15, 40, 120, 0.18), transparent 14%);
+  mix-blend-mode: screen;
+  opacity: 0.85;
+  transform: translateZ(0);
+  animation: floatB 16s ease-in-out infinite;
+}
+
+@keyframes floatA {
+  0% {
+    transform: translate3d(-3%, -2%, 0) scale(1);
+    opacity: .95;
+  }
+
+  25% {
+    transform: translate3d(4%, 3%, 0) scale(1.04);
+    opacity: .82;
+  }
+
+  50% {
+    transform: translate3d(-2%, 5%, 0) scale(0.98);
+    opacity: .9;
+  }
+
+  75% {
+    transform: translate3d(3%, -4%, 0) scale(1.02);
+    opacity: .86;
+  }
+
+  100% {
+    transform: translate3d(-3%, -2%, 0) scale(1);
+    opacity: .95;
+  }
+}
+
+@keyframes floatB {
+  0% {
+    transform: translate3d(2%, 3%, 0) scale(1);
+    opacity: .9;
+  }
+
+  25% {
+    transform: translate3d(-4%, -2%, 0) scale(1.03);
+    opacity: .78;
+  }
+
+  50% {
+    transform: translate3d(5%, -3%, 0) scale(0.99);
+    opacity: .88;
+  }
+
+  75% {
+    transform: translate3d(-2%, 4%, 0) scale(1.01);
+    opacity: .8;
+  }
+
+  100% {
+    transform: translate3d(2%, 3%, 0) scale(1);
+    opacity: .9;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  body::before,
+  body::after {
+    animation: none;
+  }
+}
+
+h1,
+h2 {
+  color: var(--foreground);
+  transition: color 300ms ease;
+}
+
+@media (prefers-color-scheme: dark) {
+
+  h1,
+  h2 {
+    color: #e5e7eb;
+  }
+}
+
+html.dark h1,
+html.dark h2 {
+  color: #e5e7eb;
+}
+
+/* Card sets base text color explicitly so headings never look dim */
+.card {
+  background: var(--background-contrast);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow-elevated);
+  padding: 2rem;
+  color: var(--foreground);
+}
+
+.card h1,
+.card h2 {
+  color: var(--foreground);
+}
+
+.card .muted {
+  color: var(--muted-foreground);
+}
+
+.card hr {
+  border-color: var(--border-color);
+}
+
+/* Inputs & placeholders */
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  font-weight: bold;
+}
+
+textarea::placeholder,
+input::placeholder {
+  color: var(--placeholder);
+}
+
+@media (prefers-color-scheme: dark) {
+
+  textarea::placeholder,
+  input::placeholder {
+    color: #b0b4ba;
+  }
+}
+
+html.dark textarea::placeholder,
+html.dark input::placeholder {
+  color: #b0b4ba;
+}
+
+:where(button, a, input, textarea):focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* ---------------------------
+   LIGHT-SWITCH TOGGLE (fixed top-right)
+   --------------------------- */
+.theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 50;
+
+  width: 72px;
+  height: 36px;
+  border-radius: 9999px;
+  padding: 4px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--overlay);
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(8px);
+}
+
+/* markers under the knob (inactive side only) */
+.theme-toggle__mark {
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  transform: translateY(-50%);
+  background: var(--border-color);
+  opacity: .6;
+  pointer-events: none;
+}
+
+.theme-toggle__mark--sun {
+  left: 10px;
+}
+
+.theme-toggle__mark--moon {
+  right: 10px;
+}
+
+html.light .theme-toggle__mark--sun {
+  display: none;
+}
+
+html.dark .theme-toggle__mark--moon {
+  display: none;
+}
+
+/* knob with active icon inside; no sliding animation */
+.theme-toggle__thumb {
+  position: absolute;
+  top: 4px;
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  background: var(--background-contrast);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-elevated);
+}
+
+html.light .theme-toggle__thumb {
+  left: 4px;
+  right: auto;
+}
+
+html.dark .theme-toggle__thumb {
+  right: 4px;
+  left: auto;
+}
+
+.theme-toggle__icon {
+  width: 16px;
+  height: 16px;
+  color: var(--foreground);
+  position: absolute;
+  inset: 0;
+  margin: auto;
+}
+
+html.light .theme-toggle__icon--sun {
+  display: block;
+}
+
+html.light .theme-toggle__icon--moon {
+  display: none;
+}
+
+html.dark .theme-toggle__icon--sun {
+  display: none;
+}
+
+html.dark .theme-toggle__icon--moon {
+  display: block;
 }
