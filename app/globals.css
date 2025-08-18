@@ -250,7 +250,6 @@ html.dark h2 {
   border: 1px solid var(--border-color);
   border-radius: 0.75rem;
   box-shadow: var(--shadow-elevated);
-  padding: 2rem;
   color: var(--foreground);
 }
 
@@ -271,6 +270,11 @@ html.dark h2 {
 input,
 textarea {
   font: inherit;
+}
+
+/* Disable the textarea resizer UI (bottom-right grab handle) */
+textarea {
+  resize: none;
 }
 
 button {

@@ -7,6 +7,7 @@ export default function Home() {
   const lastNameId = useId();
   const emailId = useId();
   const phoneId = useId();
+  const reasonId = useId();
   const textareaId = useId();
   const worthId = useId();
   // helpId and remainingId were removed (unused)
@@ -17,6 +18,7 @@ export default function Home() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [submission, setSubmission] = useState('');
+  const [reason, setReason] = useState('');
   const [worth, setWorth] = useState('');
 
   // UI state
@@ -118,7 +120,7 @@ export default function Home() {
   const validateWorth = (v) => {
     if (!v.trim()) return 'Please enter an amount.';
     const num = parseFloat(v);
-    if (isNaN(num) || num < 0) return 'Enter a valid non-negative number.';
+    if (Number.isNaN(num) || num < 0) return 'Enter a valid non-negative number.';
     return '';
   };
 
@@ -167,9 +169,10 @@ export default function Home() {
           firstname: firstName.trim(),
           lastname: lastName.trim(),
           task: submission.trim(),
+          reason: reason.trim(),
           email: email.trim(),
           phone: phone.trim(),
-          worth: worth.trim(), 
+          worth: worth.trim(),
         }),
       });
       if (!res.ok) throw new Error('Failed to submit. Please try again in a moment.');
@@ -227,7 +230,7 @@ It was super easy to use. You should check it out.`;
 
       {/* Card */}
       <section aria-labelledby={pageTitleId} className="relative max-w-xl w-full rounded-2xl card">
-        <header className="p-8 text-center">
+        <header className="pt-8 text-center">
           <h1 id={pageTitleId} className="text-3xl font-bold">What Task Are You Avoiding?</h1>
           <h2 className="mt-2 text-xl font-bold">We're gonna help you knock it out.</h2>
         </header>
@@ -236,21 +239,35 @@ It was super easy to use. You should check it out.`;
           {!submitted ? (
             <form className="space-y-4" onSubmit={onSubmit} noValidate>
 
-              <label htmlFor={textareaId} className="sr-only">Describe the task you're avoiding</label>
-              <textarea
-                id={textareaId}
-                name="task"
-                placeholder={`What is the one thing you need help getting off your “to do” list?\n\nIf you also tell us why you’ve been avoiding it, we’ll make sure our solution accounts for that. No judgement.`}
-                className="w-full rounded-xl p-3 min-h-[160px]"
-                style={{ background: 'var(--background-contrast)', color: 'var(--foreground)', border: `1px solid ${taskErr ? '#ef4444' : 'var(--border-color)'}` }}
-                value={submission}
-                onChange={(e) => { setSubmission(e.target.value); if (taskErr) setTaskErr(''); }}
-                onBlur={onBlurTask}
-                aria-invalid={!!taskErr}
-                aria-describedby={taskErr ? `${textareaId}-err` : undefined}
-                maxLength={MAX_LEN}
-              />
-              {taskErr && <p id={`${textareaId}-err`} className="mt-1 text-xs" style={{ color: '#ef4444' }}>{taskErr}</p>}
+              <div>
+                {/* <label htmlFor={textareaId} className="block text-sm font-medium mb-1">Task You Are Avoiding</label> */}
+                <textarea
+                  id={textareaId}
+                  name="task"
+                  placeholder={`What is the one thing you need help getting off your “to do” list?`}
+                  className="w-full rounded-xl p-3 min-h-[96px]"
+                  style={{ background: 'var(--background-contrast)', color: 'var(--foreground)', border: `1px solid ${taskErr ? '#ef4444' : 'var(--border-color)'}` }}
+                  value={submission}
+                  onChange={(e) => { setSubmission(e.target.value); if (taskErr) setTaskErr(''); }}
+                  onBlur={onBlurTask}
+                  aria-invalid={!!taskErr}
+                  aria-describedby={taskErr ? `${textareaId}-err` : undefined}
+                  maxLength={MAX_LEN}
+                />
+                {taskErr && <p id={`${textareaId}-err`} className="mt-1 text-xs" style={{ color: '#ef4444' }}>{taskErr}</p>}
+
+                {/* <label htmlFor={reasonId} className="block text-sm font-medium mt-4">Reason You Are Avoiding It <span className="text-xs muted">(optional)</span></label> */}
+                {/* <p className="text-xs muted mb-2">Tell us what's holding you back — this is optional but helps us remove friction.</p> */}
+                <textarea
+                  id={reasonId}
+                  name="reason"
+                  placeholder={`If you tell us why you're avoiding it (anxiety, time, unclear steps, etc.), we'll tailor the plan.`}
+                  className="w-full rounded-xl p-3 min-h-[96px]"
+                  style={{ background: 'var(--background-contrast)', color: 'var(--foreground)', border: `1px solid var(--border-color)` }}
+                  value={reason}
+                  onChange={(e) => setReason(e.target.value)}
+                />
+              </div>
               {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   
@@ -273,7 +290,7 @@ It was super easy to use. You should check it out.`;
               </div> */}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <label htmlFor="worth" className="block text-sm font-medium mb-4">
+                <label htmlFor="worth" className="block text-sm font-medium md:mb-4 md:pt-4">
                   What’s the value to you of finally getting this into the Done column?
                 </label>
                 <div className="flex items-center">
@@ -299,7 +316,7 @@ It was super easy to use. You should check it out.`;
                   {worthErr && <p id={`${worthId}-err`} className="mx-1 text-xs" style={{ color: '#ef4444' }}>{worthErr}</p>}
                 </div>
                 <div>
-                  <label htmlFor={firstNameId} className="sr-only">First Name</label>
+                  {/* <label htmlFor={firstNameId} className="block text-sm font-medium mb-1">First Name</label> */}
                   <input
                     id={firstNameId}
                     name="firstName"
@@ -323,7 +340,7 @@ It was super easy to use. You should check it out.`;
                 </div>
 
                 <div>
-                  <label htmlFor={lastNameId} className="sr-only">Last Name</label>
+                  {/* <label htmlFor={lastNameId} className="block text-sm font-medium mb-1">Last Name</label> */}
                   <input
                     id={lastNameId}
                     name="lastName"
@@ -346,7 +363,7 @@ It was super easy to use. You should check it out.`;
                   {lastNameErr && <p id={`${lastNameId}-err`} className="mt-1 text-xs" style={{ color: '#ef4444' }}>{lastNameErr}</p>}
                 </div>
                 <div>
-                  <label htmlFor={emailId} className="sr-only">Email</label>
+                  {/* <label htmlFor={emailId} className="block text-sm font-medium mb-1">Email</label> */}
                   <input
                     id={emailId}
                     name="email"
@@ -371,7 +388,7 @@ It was super easy to use. You should check it out.`;
                 </div>
 
                 <div>
-                  <label htmlFor={phoneId} className="sr-only">Phone</label>
+                  {/* <label htmlFor={phoneId} className="block text-sm font-medium mb-1">Phone</label> */}
                   <input
                     id={phoneId}
                     name="phone"

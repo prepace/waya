@@ -12,7 +12,7 @@ const supabase = createClient(
 
 export async function POST(request) {
     try {
-        const { taskId, task, worth } = await request.json();
+        const { taskId, task, reason, worth } = await request.json();
 
         if (!taskId || !task?.trim() || worth === undefined) {
             return NextResponse.json({ error: 'Missing required fields: taskId, task, worth' }, { status: 400 });
@@ -29,7 +29,7 @@ export async function POST(request) {
             "Keep it simple, fun, and friction-free: the user should only need <15 minutes to approve or hand off."
         ].join(' ');
 
-        const user = `Task: "${task.trim()}". User says getting this done is worth $${worth}.`;
+        const user = `Task: "${task.trim()}". User says getting this done is worth $${worth}. Reason, if available: ${reason?.trim()}.`;
 
         // ----- Structured output spec -----
         const response_format = {
