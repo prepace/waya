@@ -261,7 +261,7 @@ It was super easy to use. You should check it out.`;
                 <textarea
                   id={reasonId}
                   name="reason"
-                  placeholder={`If you tell us why you're avoiding it (anxiety, time, unclear steps, etc.), we'll tailor the plan.`}
+                  placeholder={`If you tell us why you're avoiding it (anxiety, time, unclear steps, etc.), we'll take this into account. No judgment.`}
                   className="w-full rounded-xl p-3 min-h-[96px]"
                   style={{ background: 'var(--background-contrast)', color: 'var(--foreground)', border: `1px solid var(--border-color)` }}
                   value={reason}
