@@ -116,7 +116,7 @@ export default function Home() {
   const validateTask = (v) => v.trim() ? '' : 'Tell us what you’re avoiding.';
 
   const validateWorth = (v) => {
-    if (!v.trim()) return 'Please enter a dollar amount.';
+    if (!v.trim()) return 'Please enter an amount.';
     const num = parseFloat(v);
     if (isNaN(num) || num < 0) return 'Enter a valid non-negative number.';
     return '';
@@ -251,39 +251,16 @@ It was super easy to use. You should check it out.`;
                 maxLength={MAX_LEN}
               />
               {taskErr && <p id={`${textareaId}-err`} className="mt-1 text-xs" style={{ color: '#ef4444' }}>{taskErr}</p>}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="worth" className="block text-sm font-medium mb-1">
-                    What’s the value to you of finally getting this into the Done column?
-                  </label>
-                  <div className="flex items-center">
-                    <span className="mr-2">$</span>
-                    <input
-                      id={worthId}
-                      name="worth"
-                      type="number"
-                      required
-                      min="0"
-                      step="1"
-                      placeholder="e.g. 50"
-                      value={worth}
-                      onChange={(e) => { setWorth(e.target.value); if (worthErr) setWorthErr(''); }}
-                      onBlur={() => setWorthErr(validateWorth(worth))}
-                      className="w-32 rounded-xl p-3"
-                      style={{
-                        background: 'var(--background-contrast)',
-                        color: 'var(--foreground)',
-                        border: `1px solid ${worthErr ? '#ef4444' : 'var(--border-color)'}`,
-                      }}
-                    />
-                  </div>
-                  {/* <p className="text-xs text-gray-500 mt-1">
+                  
+                  <p className="text-xs text-gray-500 mt-1">
                     Please provide a rough estimate. Ranges are okay (e.g., 0, 25, 100+). This helps us prioritize solutions.
-                  </p> */}
-                  {worthErr && <p id={`${worthId}-err`} className="mt-1 text-xs" style={{ color: '#ef4444' }}>{worthErr}</p>}
+                  </p>
+                  
                 </div>
 
-                {/* <div className="text-sm space-y-1">
+                <div className="text-sm space-y-1">
                   <p className="font-semibold mb-1">Examples:</p>
                   <ul className="list-disc ml-5 space-y-1">
                     <li>$0 — Doesn’t really bother me</li>
@@ -292,10 +269,35 @@ It was super easy to use. You should check it out.`;
                     <li>$100 — Really important to me</li>
                     <li>$500+ — Huge relief</li>
                   </ul>
-                </div> */}
-              </div>
+                </div>
+              </div> */}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <label htmlFor="worth" className="block text-sm font-medium mb-4">
+                  What’s the value to you of finally getting this into the Done column?
+                </label>
+                <div className="flex items-center">
+                  <span className="mr-2">$</span>
+                  <input
+                    id={worthId}
+                    name="worth"
+                    type="number"
+                    required
+                    min="0"
+                    step="1"
+                    placeholder="e.g. 50"
+                    value={worth}
+                    onChange={(e) => { setWorth(e.target.value); if (worthErr) setWorthErr(''); }}
+                    onBlur={() => setWorthErr(validateWorth(worth))}
+                    className="w-32 rounded-xl p-3"
+                    style={{
+                      background: 'var(--background-contrast)',
+                      color: 'var(--foreground)',
+                      border: `1px solid ${worthErr ? '#ef4444' : 'var(--border-color)'}`,
+                    }}
+                  />
+                  {worthErr && <p id={`${worthId}-err`} className="mx-1 text-xs" style={{ color: '#ef4444' }}>{worthErr}</p>}
+                </div>
                 <div>
                   <label htmlFor={firstNameId} className="sr-only">First Name</label>
                   <input
@@ -343,9 +345,6 @@ It was super easy to use. You should check it out.`;
                   />
                   {lastNameErr && <p id={`${lastNameId}-err`} className="mt-1 text-xs" style={{ color: '#ef4444' }}>{lastNameErr}</p>}
                 </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor={emailId} className="sr-only">Email</label>
                   <input
