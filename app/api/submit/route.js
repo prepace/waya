@@ -1,3 +1,4 @@
+// app/api/submit/route.js
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
@@ -9,33 +10,49 @@ const supabase = createClient(
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { task, name, firstname, lastname, email, phone } = body || {};
+        const { task, name, firstname, lastname, email, phone, reason } = body || {};
 
         if (!task || !name || !firstname || !lastname || !email || !phone) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
-        const { error } = await supabase
+        // 1) Insert the task and return its id
+        const { data, error } = await supabase
             .from('tasks')
-            .insert([
-                {
-                    timestamp: new Date().toISOString(),
-                    task,
-                    name,
-                    firstname,
-                    lastname,
-                    email,
-                    phone,
-                    status: 'New',
-                },
-            ]);
+            .insert([{
+                timestamp: new Date().toISOString(),
+                task, name, firstname, lastname, email, phone, status: 'New'
+            }])
+            .select('id')   // <-- important to get the new PK
+            .single();
 
-        if (error) {
+        if (error || !data?.id) {
             console.error('Supabase insert error:', error);
             return NextResponse.json({ error: 'Failed to write to Supabase' }, { status: 500 });
         }
 
-        return NextResponse.json({ success: true });
+        const taskId = data.id;
+
+        // 2) Call internal /api/ideas to generate & save ideas (don’t block success if it fails)
+        const origin = new URL(request.url).origin; // works on Vercel/Next
+        try {
+            const ideasResp = await fetch(`${origin}/api/ideas`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                // send whatever you want ideas to consider
+                body: JSON.stringify({ taskId, task, reason: reason || null })
+            });
+
+            // We won’t fail the submission if ideas step fails
+            if (!ideasResp.ok) {
+                const errTxt = await ideasResp.text();
+                console.error('Ideas route error:', ideasResp.status, errTxt);
+            }
+        } catch (e) {
+            console.error('Ideas call failed:', e);
+        }
+
+        return NextResponse.json({ success: true, task_id: taskId });
     } catch (err) {
         console.error('Submit handler error:', err);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
