@@ -151,9 +151,9 @@ export default function Home() {
         body: JSON.stringify({
           // keep a friendly combined name but also send camelCase fields the server expects
           name: (`${firstName} ${lastName}`).trim(),
-          firstName: firstName.trim(),
-          lastName: lastName.trim(),
-          avoiding: submission.trim(),
+          firstname: firstName.trim(),
+          lastname: lastName.trim(),
+          task: submission.trim(),
           email: email.trim(),
           phone: phone.trim(),
         }),
@@ -172,8 +172,14 @@ export default function Home() {
   // build a safe mailto href for the Share button (use try/catch because window might be missing briefly)
   const mailtoHref = (() => {
     try {
-      const subject = "Hey — try this 'Get It Done' help page";
-      const body = `Hi — I found this helpful site that gives quick ideas to get small tasks done. Check it out: ${window.location.href}`;
+      const subject = "I found this great site to stop avoiding things and just get it done";
+      const body = `Hi!
+
+I just discovered this great site called www.WhatAreYouAvoiding.com.
+
+You just enter the task you’ve been putting off and they help you get it done.
+
+It was super easy to use. You should check it out.`;
       return `mailto:${encodeURIComponent(friendEmail || '')}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     } catch {
       return `mailto:${encodeURIComponent(friendEmail || '')}`;
