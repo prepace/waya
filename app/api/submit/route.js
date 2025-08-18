@@ -10,9 +10,9 @@ const supabase = createClient(
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { task, name, firstname, lastname, email, phone, reason } = body || {};
+        const { task, name, firstname, lastname, email, phone, worth } = body || {};
 
-        if (!task || !name || !firstname || !lastname || !email || !phone) {
+        if (!task || !name || !firstname || !lastname || !email || !phone || !worth) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
@@ -21,7 +21,7 @@ export async function POST(request) {
             .from('tasks')
             .insert([{
                 timestamp: new Date().toISOString(),
-                task, name, firstname, lastname, email, phone, status: 'New'
+                task, name, firstname, lastname, email, phone, worth, status: 'New'
             }])
             .select('id')   // <-- important to get the new PK
             .single();
@@ -40,7 +40,7 @@ export async function POST(request) {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 // send whatever you want ideas to consider
-                body: JSON.stringify({ taskId, task, reason: reason || null })
+                body: JSON.stringify({ taskId, task, worth })
             });
 
             // We won’t fail the submission if ideas step fails

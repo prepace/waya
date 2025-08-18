@@ -8,6 +8,7 @@ export default function Home() {
   const emailId = useId();
   const phoneId = useId();
   const textareaId = useId();
+  const worthId = useId();
   // helpId and remainingId were removed (unused)
 
   // form fields
@@ -16,6 +17,7 @@ export default function Home() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [submission, setSubmission] = useState('');
+  const [worth, setWorth] = useState('');
 
   // UI state
   const [submitted, setSubmitted] = useState(false);
@@ -31,6 +33,7 @@ export default function Home() {
   const [emailErr, setEmailErr] = useState('');
   const [phoneErr, setPhoneErr] = useState('');
   const [taskErr, setTaskErr] = useState('');
+  const [worthErr, setWorthErr] = useState('');
 
   const MAX_LEN = 2000;
 
@@ -112,16 +115,25 @@ export default function Home() {
   };
   const validateTask = (v) => v.trim() ? '' : 'Tell us what you’re avoiding.';
 
+  const validateWorth = (v) => {
+    if (!v.trim()) return 'Please enter a dollar amount.';
+    const num = parseFloat(v);
+    if (isNaN(num) || num < 0) return 'Enter a valid non-negative number.';
+    return '';
+  };
+
+
   // live validity
   const firstNameError = validateFirstName(firstName);
   const lastNameError = validateLastName(lastName);
   const emailError = validateEmail(email);
   const phoneError = validatePhone(phone);
   const taskError = validateTask(submission);
+  const worthError = validateWorth(worth);
   const isTooLong = submission.length > MAX_LEN;
   // showRemaining removed (unused)
 
-  const formValid = !firstNameError && !lastNameError && !emailError && !phoneError && !taskError && !isTooLong;
+  const formValid = !firstNameError && !lastNameError && !emailError && !phoneError && !taskError && !isTooLong && !worthError;
 
   // blur handlers to show sticky messages
   const onBlurFirstName = () => setFirstNameErr(validateFirstName(firstName));
@@ -139,8 +151,9 @@ export default function Home() {
     const eErr = validateEmail(email);
     const pErr = validatePhone(phone);
     const tErr = validateTask(submission);
-    setFirstNameErr(nErr); setLastNameErr(lErr); setEmailErr(eErr); setPhoneErr(pErr); setTaskErr(tErr);
-    if (nErr || lErr || eErr || pErr || tErr || isTooLong || isSending) return;
+    const wErr = validateWorth(worth);
+    setFirstNameErr(nErr); setLastNameErr(lErr); setEmailErr(eErr); setPhoneErr(pErr); setTaskErr(tErr); setWorthErr(wErr);
+    if (nErr || lErr || eErr || pErr || tErr || isTooLong || isSending || wErr) return;
 
     setIsSending(true);
     setError(null);
@@ -156,12 +169,13 @@ export default function Home() {
           task: submission.trim(),
           email: email.trim(),
           phone: phone.trim(),
+          worth: worth.trim(), 
         }),
       });
       if (!res.ok) throw new Error('Failed to submit. Please try again in a moment.');
       setSubmitted(true);
-      setSubmission(''); setFirstName(''); setLastName(''); setEmail(''); setPhone('');
-      setFirstNameErr(''); setLastNameErr(''); setEmailErr(''); setPhoneErr(''); setTaskErr('');
+      setSubmission(''); setFirstName(''); setLastName(''); setEmail(''); setPhone(''); setWorth('');
+      setFirstNameErr(''); setLastNameErr(''); setEmailErr(''); setPhoneErr(''); setTaskErr(''); setWorthErr('');
     } catch (err) {
       setError(err?.message || 'Something went wrong. Please try again.');
     } finally {
@@ -215,7 +229,7 @@ It was super easy to use. You should check it out.`;
       <section aria-labelledby={pageTitleId} className="relative max-w-xl w-full rounded-2xl card">
         <header className="p-8 text-center">
           <h1 id={pageTitleId} className="text-3xl font-bold">What Task Are You Avoiding?</h1>
-          <h2 className="mt-2 text-xl font-bold">We'll help you knock it out, for free.</h2>
+          <h2 className="mt-2 text-xl font-bold">We'll send you a personalized plan to help you knock it out.</h2>
         </header>
 
         <div className="p-8">
@@ -237,6 +251,49 @@ It was super easy to use. You should check it out.`;
                 maxLength={MAX_LEN}
               />
               {taskErr && <p id={`${textareaId}-err`} className="mt-1 text-xs" style={{ color: '#ef4444' }}>{taskErr}</p>}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="worth" className="block text-sm font-medium mb-1">
+                    What’s the value of finally getting this into the “DONE” column?
+                  </label>
+                  <div className="flex items-center">
+                    <span className="mr-2">$</span>
+                    <input
+                      id={worthId}
+                      name="worth"
+                      type="number"
+                      required
+                      min="0"
+                      step="1"
+                      placeholder="e.g. 50"
+                      value={worth}
+                      onChange={(e) => { setWorth(e.target.value); if (worthErr) setWorthErr(''); }}
+                      onBlur={() => setWorthErr(validateWorth(worth))}
+                      className="w-32 rounded-xl p-3"
+                      style={{
+                        background: 'var(--background-contrast)',
+                        color: 'var(--foreground)',
+                        border: `1px solid ${worthErr ? '#ef4444' : 'var(--border-color)'}`,
+                      }}
+                    />
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Please provide a rough estimate. Ranges are okay (e.g., 0, 25, 100+). This helps us prioritize solutions.
+                  </p>
+                  {worthErr && <p id={`${worthId}-err`} className="mt-1 text-xs" style={{ color: '#ef4444' }}>{worthErr}</p>}
+                </div>
+
+                <div className="text-sm space-y-1">
+                  <p className="font-semibold mb-1">Examples:</p>
+                  <ul className="list-disc ml-5 space-y-1">
+                    <li>$0 — Doesn’t really bother me</li>
+                    <li>$5 — Just nice to have done</li>
+                    <li>$20 — Would save me stress</li>
+                    <li>$100 — Really important to me</li>
+                    <li>$500+ — Huge relief</li>
+                  </ul>
+                </div>
+              </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
