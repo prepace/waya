@@ -300,6 +300,20 @@ html.dark input::placeholder {
   outline-offset: 2px;
 }
 
+/* Remove native spin buttons on numeric inputs for a cleaner UI */
+/* Chrome, Safari, Edge, Opera */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
 /* ---------------------------
    LIGHT-SWITCH TOGGLE (fixed top-right)
    --------------------------- */

@@ -229,7 +229,7 @@ It was super easy to use. You should check it out.`;
       <section aria-labelledby={pageTitleId} className="relative max-w-xl w-full rounded-2xl card">
         <header className="p-8 text-center">
           <h1 id={pageTitleId} className="text-3xl font-bold">What Task Are You Avoiding?</h1>
-          <h2 className="mt-2 text-xl font-bold">We'll send you a personalized plan to help you knock it out.</h2>
+          <h2 className="mt-2 text-xl font-bold">We're gonna help you knock it out.</h2>
         </header>
 
         <div className="p-8">
@@ -254,7 +254,7 @@ It was super easy to use. You should check it out.`;
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="worth" className="block text-sm font-medium mb-1">
-                    What’s the value of finally getting this into the “DONE” column?
+                    What’s the value to you of finally getting this into the Done column?
                   </label>
                   <div className="flex items-center">
                     <span className="mr-2">$</span>
@@ -277,13 +277,13 @@ It was super easy to use. You should check it out.`;
                       }}
                     />
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
+                  {/* <p className="text-xs text-gray-500 mt-1">
                     Please provide a rough estimate. Ranges are okay (e.g., 0, 25, 100+). This helps us prioritize solutions.
-                  </p>
+                  </p> */}
                   {worthErr && <p id={`${worthId}-err`} className="mt-1 text-xs" style={{ color: '#ef4444' }}>{worthErr}</p>}
                 </div>
 
-                <div className="text-sm space-y-1">
+                {/* <div className="text-sm space-y-1">
                   <p className="font-semibold mb-1">Examples:</p>
                   <ul className="list-disc ml-5 space-y-1">
                     <li>$0 — Doesn’t really bother me</li>
@@ -292,7 +292,7 @@ It was super easy to use. You should check it out.`;
                     <li>$100 — Really important to me</li>
                     <li>$500+ — Huge relief</li>
                   </ul>
-                </div>
+                </div> */}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
